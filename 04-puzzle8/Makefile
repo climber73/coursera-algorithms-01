@@ -1,8 +1,8 @@
 compile:
-	javac Solver.java Board.java Main.java
+	javac -cp algs4.jar Solver.java Board.java
 
 zip:
 	zip 8puzzle.zip Board.java Solver.java
 
 clean:
-	rm -f Solver.class Board.class Main.class 8puzzle.zip
+	rm -f Solver.class Board.class 8puzzle.zip
