@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 
 // find a solution to the initial board (using the A* algorithm)
 public class Solver {
-    private MinPQ<Node> q;
+    private MinPQ<Node> q1, q2;
     private Board[] solution;
 
     private int moves;
@@ -17,26 +17,27 @@ public class Solver {
         Board board;
         Board predecessor;
         int movesMade;
-        int manhattan;
-        Node(Board b, int m, Board p) {
+        Node pre;
+        Node(Board b, int m, Board p, Node pre) {
             this.board = b;
             this.movesMade = m;
             this.predecessor = p;
-            this.manhattan = b.manhattan();
+            this.pre = pre;
         }
 
         @Override
         public int compareTo(Node o) {
-            return Integer.compare(this.movesMade + this.manhattan, o.movesMade + o.manhattan);
+            return Integer.compare(this.movesMade + this.board.manhattan(), o.movesMade + o.board.manhattan());
         }
     }
 
     public Solver(Board initial) {
         if (initial == null)
             throw new IllegalArgumentException();
-        this.q = new MinPQ<>();
-        Node n = new Node(initial, 0, null);
-        q.insert(n);
+        this.q1 = new MinPQ<>();
+        this.q2 = new MinPQ<>();
+        q1.insert(new Node(initial, 0, null, null));
+        q2.insert(new Node(initial.twin(), 0, null, null));
     }
 
     public boolean isSolvable() {
@@ -47,19 +48,32 @@ public class Solver {
     public int moves() {
         if (solution != null) return moves;
 
-        Node n = q.delMin();
-        while (!n.board.isGoal()) {
-            for (Board neighbor : n.board.neighbors()) {
-                if (neighbor.equals(n.predecessor)) continue;
-                q.insert(new Node(neighbor, n.movesMade+1, n.board));
+        Node n1 = q1.delMin();
+        Node n2 = q2.delMin();
+        while (!n1.board.isGoal() && !n2.board.isGoal()) {
+            for (Board neighbor : n1.board.neighbors()) {
+                if (neighbor.equals(n1.predecessor)) continue;
+                q1.insert(new Node(neighbor, n1.movesMade+1, n1.board, n1));
             }
-            n = q.delMin();
+            n1 = q1.delMin();
+
+            for (Board neighbor : n2.board.neighbors()) {
+                if (neighbor.equals(n2.predecessor)) continue;
+                q2.insert(new Node(neighbor, n2.movesMade+1, n2.board, n2));
+            }
+            n2 = q2.delMin();
         }
-        moves = n.movesMade;
-        solution = new Board[moves+1];
-        for (int j = moves; j >= 0; j--) {
-            solution[j] = n.board;
-            n.board = n.predecessor;
+        if (n1.board.isGoal()) {
+            moves = n1.movesMade;
+            solution = new Board[moves+1];
+            Node tmp = n1;
+            for (int j = moves; j >= 0; j--) {
+                solution[j] = tmp.board;
+                tmp = tmp.pre;
+            }
+        } else {
+            moves = -1;
+            solution = new Board[0];
         }
         return moves;
     }
@@ -72,7 +86,7 @@ public class Solver {
 
             @Override
             public boolean hasNext() {
-                return index < moves;
+                return index < moves+1;
             }
 
             @Override
