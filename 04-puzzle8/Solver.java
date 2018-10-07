@@ -56,8 +56,8 @@ public class Solver {
             n = q.delMin();
         }
         moves = n.movesMade;
-        solution = new Board[moves];
-        for (int j = moves-1; j >= 0; j--) {
+        solution = new Board[moves+1];
+        for (int j = moves; j >= 0; j--) {
             solution[j] = n.board;
             n.board = n.predecessor;
         }
