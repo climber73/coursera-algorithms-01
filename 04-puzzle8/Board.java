@@ -5,7 +5,8 @@ public class Board {
 
     private int[][] blocks;
     private int n;
-    private int i0 = n, j0 = n;
+    private int i0, j0;
+    private int manhattan = -1;
 
     public Board(int[][] blocks) {  // (where blocks[i][j] = block in row i, column j)
         n = blocks.length;
@@ -17,6 +18,8 @@ public class Board {
             throw new IllegalArgumentException();
         }
         this.blocks = blocks;
+        this.i0 = n;  // unknown
+        this.j0 = n;  // unknown
     }
 
     public int dimension() {
@@ -38,6 +41,9 @@ public class Board {
     }
 
     public int manhattan() {
+        if (manhattan != -1) {
+            return manhattan;
+        }
         int c, x, y, res = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -48,15 +54,15 @@ public class Board {
                 }
                 x = Math.abs((c-1) % n - j);
                 y = Math.abs((c-1) / n - i);
-//                System.out.println(c + ": " + x + ", " + y);
                 res += x+y;
             }
         }
-        return res;
+        manhattan = res;
+        return manhattan;
     }
 
     public boolean isGoal() {
-        return hamming() == 0;
+        return manhattan() == 0;
     }
 
     public Board twin() {
@@ -88,7 +94,14 @@ public class Board {
             if (n != other.dimension()) {
                 return false;
             }
-            return manhattan() == other.manhattan();
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (blocks[i][j] != other.blocks[i][j]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
         return false;
     }
@@ -173,9 +186,11 @@ public class Board {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append(n);
+        sb.append("\n");
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                sb.append(String.format("%3s", blocks[i][j]));
+                sb.append(String.format("%2s", blocks[i][j]));
                 sb.append(" ");
             }
             sb.append("\n");

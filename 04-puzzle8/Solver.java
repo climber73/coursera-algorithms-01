@@ -11,7 +11,6 @@ public class Solver {
     private Board[] solution;
 
     private int moves;
-    private boolean solved = false;
 
     // Element of Priority Queue
     private class Node implements Comparable<Node>{
@@ -35,10 +34,6 @@ public class Solver {
     public Solver(Board initial) {
         if (initial == null)
             throw new IllegalArgumentException();
-
-        this.solution = new Board[100]; // todo
-        this.solution[0] = initial;
-
         this.q = new MinPQ<>();
         Node n = new Node(initial, 0, null);
         q.insert(n);
@@ -50,19 +45,22 @@ public class Solver {
 
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
-        if (solved) return moves;
+        if (solution != null) return moves;
 
         Node n = q.delMin();
         while (!n.board.isGoal()) {
             for (Board neighbor : n.board.neighbors()) {
-                if (neighbor.equals(n.board)) continue;
+                if (neighbor.equals(n.predecessor)) continue;
                 q.insert(new Node(neighbor, n.movesMade+1, n.board));
             }
             n = q.delMin();
-            solution[n.movesMade] = n.board;
         }
         moves = n.movesMade;
-        solved = true;
+        solution = new Board[moves];
+        for (int j = moves-1; j >= 0; j--) {
+            solution[j] = n.board;
+            n.board = n.predecessor;
+        }
         return moves;
     }
 
