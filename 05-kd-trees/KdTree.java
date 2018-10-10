@@ -3,6 +3,10 @@ import edu.princeton.cs.algs4.RectHV;
 
 public class KdTree {
 
+    private class Node {
+        // stub
+    }
+
     // construct an empty set of points
     public KdTree() {
 
