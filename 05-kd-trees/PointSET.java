@@ -7,12 +7,10 @@ import java.util.TreeSet;
 public class PointSET {
 
     private TreeSet<Point2D> ts;
-    private Draw draw;
 
     // construct an empty set of points
     public PointSET() {
         this.ts = new TreeSet<>();
-        this.draw = new Draw();
     }
 
     public boolean isEmpty() {
@@ -38,6 +36,7 @@ public class PointSET {
 
     // draw all points to standard draw
     public void draw() {
+        Draw draw = new Draw();
         for (Point2D p : ts) {
             draw.point(p.x(), p.y());
         }
@@ -59,28 +58,14 @@ public class PointSET {
         if (point == null) throw new IllegalArgumentException();
         if (isEmpty()) return null;
         Point2D nearest = ts.first();
-        double minDist = point.distanceTo(nearest);
+        double dist, minDist = point.distanceSquaredTo(nearest);
         for (Point2D p : ts) {
-            if (p.distanceTo(p) < minDist) {
+            dist = p.distanceSquaredTo(point);
+            if (dist < minDist) {
+                minDist = dist;
                 nearest = p;
             }
         }
         return nearest;
-    }
-
-    public static void main(String[] args) {
-        PointSET ps = new PointSET();
-        Point2D p1 = new Point2D(0.0, 0.0);
-        Point2D p2 = new Point2D(0.1, 0.0);
-        Point2D p3 = new Point2D(0.2, 0.0);
-        Point2D p4 = new Point2D(0.3, 0.0);
-        double x = 0, y = 0;
-        for (float i = 0; i < 10; i++) {
-            x = 0.0 + (i / 10);
-            y = 0.0 + (i / 10);
-            System.out.println(x);
-            ps.insert(new Point2D(x, y));
-        }
-        ps.draw();
     }
 }
