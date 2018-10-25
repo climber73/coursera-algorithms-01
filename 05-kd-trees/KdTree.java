@@ -7,6 +7,8 @@ import java.util.List;
 
 public class KdTree {
 
+    private final RectHV UNIT_SQUARE = new RectHV(0, 0, 1, 1);
+
     private class Node {
         double key;
         Point2D point;
@@ -128,7 +130,7 @@ public class KdTree {
         if (rect == null) throw new IllegalArgumentException();
 
         List<Point2D> res = new ArrayList<>(); //todo: queue
-        findPoints(root, new RectHV(0, 0, 1, 1), rect, true, res);
+        findPoints(root, UNIT_SQUARE, rect, true, res);
         return res;
     }
 
@@ -153,7 +155,7 @@ public class KdTree {
 
         minDist = Double.MAX_VALUE;
         nearest = null;
-        return findNearest(root, new RectHV(0, 0, 1, 1), p, true);
+        return findNearest(root, UNIT_SQUARE, p, true);
     }
 
     // we need this variables to make recursive function `findNearest` work properly
