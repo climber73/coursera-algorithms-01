@@ -129,8 +129,7 @@ public class KdTree {
     }
 
     private void findPoints(Node root, RectHV nodeRect, RectHV rect, boolean useX, List<Point2D> res) {
-        if (root == null)
-            return;
+        if (root == null) return;
 
         if (!rect.intersects(nodeRect))
             return;
@@ -139,27 +138,21 @@ public class KdTree {
         if (rect.contains(point))
             res.add(point);
 
-        RectHV leftRect, rightRect;
-        if (useX) {
-            leftRect = new RectHV(0, 0, point.x(), 1);
-            rightRect = new RectHV(point.x(), 0, 1, 1);
-        } else {
-            leftRect = new RectHV(0, 0, 1, point.y());
-            rightRect = new RectHV(0, point.y(), 1, 1);
-        }
-        findPoints(root.left, leftRect, rect, !useX, res);
-        findPoints(root.right, rightRect, rect, !useX, res);
+        RectHV[] both = getBothRectangles(nodeRect, point, useX);
+        findPoints(root.left,  both[0], rect, !useX, res);
+        findPoints(root.right, both[1], rect, !useX, res);
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
     public Point2D nearest(Point2D p) {
-        findNearest(root, new RectHV(0, 0, 1, 1), p, true);
-        return nearest;
+        minDist = Double.MAX_VALUE;
+        nearest = null;
+        return findNearest(root, new RectHV(0, 0, 1, 1), p, true);
     }
 
-    private double minDist = Double.MAX_VALUE;
-    private Point2D nearest = null;
-
+    // we need this variables to make recursive function `findNearest` work properly
+    private double minDist;
+    private Point2D nearest;
     private Point2D findNearest(Node root, RectHV rect, Point2D destination, boolean useX) {
         if (root == null) return null;
 
@@ -172,16 +165,6 @@ public class KdTree {
             minDist = dist;
             nearest = point;
         }
-//        System.out.println(point + " " + dist + "\t\tmin=" + nearest);
-
-        RectHV leftRect, rightRect;
-        if (useX) {
-            leftRect = new RectHV(0, 0, point.x(), 1);
-            rightRect = new RectHV(point.x(), 0, 1, 1);
-        } else {
-            leftRect = new RectHV(0, 0, 1, point.y());
-            rightRect = new RectHV(0, point.y(), 1, 1);
-        }
 
         double keyCoord;
         if (useX)
@@ -189,14 +172,33 @@ public class KdTree {
         else
             keyCoord = destination.y();
 
+        RectHV[] both = getBothRectangles(rect, point, useX);
+//        System.out.printf("%14s %2.4f min=%s l=%26s, r=%26s\n", point, dist, nearest, both[0], both[1]);
         if (root.key > keyCoord) {
-            findNearest(root.left, leftRect, destination, !useX);
-            findNearest(root.right, rightRect, destination, !useX);
+            findNearest(root.left,  both[0], destination, !useX);
+            findNearest(root.right, both[1], destination, !useX);
         } else {
-            findNearest(root.right, rightRect, destination, !useX);
-            findNearest(root.left, leftRect, destination, !useX);
+            findNearest(root.right, both[1], destination, !useX);
+            findNearest(root.left,  both[0], destination, !useX);
         }
 
         return nearest;
+    }
+
+    // function divide parent rectangle into two parts by X or Y depending on 'useX'
+    // return the left and right parts as two items of array - first and second correspondingly
+    private RectHV[] getBothRectangles(RectHV parent, Point2D point, boolean useX) {
+        RectHV leftRect, rightRect;
+        if (useX) {
+            leftRect =  new RectHV(parent.xmin(), parent.ymin(), point.x(),     parent.ymax());
+            rightRect = new RectHV(point.x(),     parent.ymin(), parent.xmax(), parent.ymax());
+        } else {
+            leftRect =  new RectHV(parent.xmin(), parent.ymin(), parent.xmax(), point.y());
+            rightRect = new RectHV(parent.xmin(), point.y(),     parent.xmax(), parent.ymax());
+        }
+        RectHV[] both = new RectHV[2];
+        both[0] = leftRect;
+        both[1] = rightRect;
+        return both;
     }
 }
