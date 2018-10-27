@@ -199,24 +199,6 @@ public class Board {
     }
 
     public static void main(String[] args) {
-        int n = 3;
-        int[][] a = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                a[i][j] = i*n+j+1;
-            }
-        }
-        a[0][0] = 8;
-        a[2][2] = 0;
-        a[2][1] = 1;
-        Board b = new Board(a);
-        System.out.println(b);
-        System.out.println(b.twin());
-        System.out.println("hamming: " + b.hamming());
-        System.out.println("manhattan: " + b.manhattan());
 
-        for (Board z : b.neighbors()) {
-            System.out.println("n1: " + z);
-        }
     }
 }

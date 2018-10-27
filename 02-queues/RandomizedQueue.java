@@ -1,5 +1,3 @@
-import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.Iterator;
@@ -156,31 +154,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        RandomizedQueue<Integer> rq = new RandomizedQueue<Integer>();
-        rq.enqueue(902);
-        System.out.println(rq.sample());
-//        RandomizedQueue<String> queue = new RandomizedQueue<>();
-////        String[] a = new String[10];
-//        for (int i = 0; i < 10; i++) {
-//            queue.enqueue(Integer.toString(i));
-////            a[i] = Integer.toString(i);
-//            System.out.print(i);
-//        }
-//        System.out.println();
 
-//        a[0] = "9";
-//        a[1] = "7";
-//        System.out.println("except array: ");
-//        for (String s:a) {
-//            System.out.print(s);
-//        }
-//        System.out.println();
-//        Node node = queue.findExcept(2, a);
-//        if (node == null) System.out.println(node);
-//        else System.out.println(node.item);
-
-//        for (String s : queue) {
-//            System.out.println(s);
-//        }
     }
 }

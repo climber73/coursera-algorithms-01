@@ -68,41 +68,11 @@ public class Percolation {
     }
 
     private void union(int r, int c, int opened) {
-        if (check(r, c))
-            if (grid[r - 1][c - 1])
-                uf.union(index(r, c), opened);
-    }
-
-    private void printGrid() {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (grid[i][j])
-                    System.out.print("o ");
-                else
-                    System.out.print(". ");
-            }
-            System.out.println();
-        }
-    }
-
-    private void printUF() {
-        System.out.println(uf.find(0));
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.print(uf.find(i * n + j + 1) + " ");
-            }
-            System.out.println();
-        }
-        System.out.println(uf.find(n * n + 1));
+        if (check(r, c) && grid[r - 1][c - 1])
+            uf.union(index(r, c), opened);
     }
 
     public static void main(String[] args) {
-        Percolation p = new Percolation(10);
-        for (int i = 1; i <= 10; i++) {
-            p.open(i, 3);
-            if (!p.isOpen(i, 3)) throw new RuntimeException();
-        }
-        p.printGrid();
-        p.printUF();
+
     }
 }

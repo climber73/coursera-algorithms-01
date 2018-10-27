@@ -1,7 +1,3 @@
-//import java.io.BufferedReader;
-//import java.io.File;
-//import java.io.FileReader;
-//import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -50,10 +46,6 @@ public class FastCollinearPoints {
         return segments;
     }
 
-//    private SegmentPool test(int n) {
-//        return new SegmentPool(n, 0);
-//    }
-
     private class SegmentPool implements Iterable<Segment> {
         int lastSegmentIndex;
         Segment[] segments;
@@ -87,13 +79,6 @@ public class FastCollinearPoints {
                 lastSegmentIndex++;
                 segments[lastSegmentIndex] = segment;
             }
-        }
-
-        void print() {
-            for (int i = 0; i <= lastSegmentIndex; i++) {
-                if (segments[i].size() >= 3) segments[i].print();
-            }
-            System.out.println("=======");
         }
 
         public Iterator<Segment> iterator() {
@@ -239,16 +224,6 @@ public class FastCollinearPoints {
             }
             return ls;
         }
-
-        void print() {
-            System.out.println("-----line segment:----");
-            LSItem i = top;
-            while (i != null) {
-                System.out.println(i.ls);
-                i = i.next;
-            }
-            System.out.println("--------------------");
-        }
     }
 
     private class Item {
@@ -271,80 +246,6 @@ public class FastCollinearPoints {
     }
 
     public static void main(String[] args) {
-//        FastCollinearPoints outerObject = new FastCollinearPoints(new Point[0]);
-//        Segment b = outerObject.new Segment(1, 0);
-//        b.add(2);
-//        b.add(3);
-//        b.add(4);
-//        b.print();
-//        System.out.println("size: " + b.size());
 
-//        FastCollinearPoints outerObject = new FastCollinearPoints(new Point[0]);
-//        SegmentPool pool = outerObject.test(10);
-//        pool.addForSlope(45, 1);
-//        pool.addForSlope(5, 2);
-//        pool.addForSlope(45, 3);
-//        pool.addForSlope(5, 4);
-//        pool.addForSlope(5, 5);
-//        pool.addForSlope(45, 6);
-//        pool.print();
-//
-//        Point[] points = new Point[12];
-//        points[0] = new Point(0, 0);
-//        points[1] = new Point(2, 2);
-//        points[2] = new Point(5, 5);
-//        points[3] = new Point(3, 1);
-//        points[4] = new Point(6, 2);
-//        points[5] = new Point(9, 3);
-//        points[6] = new Point(7, -1);
-//        points[7] = new Point(4, 8);
-//        points[8] = new Point(0, -2);
-//        points[9] = new Point(3, -1);
-//        points[10] = new Point(6, 0);
-//        points[11] = new Point(9, 1);
-//
-//        FastCollinearPoints f = new FastCollinearPoints(points);
-//        f.segments();
-//        String fileName = "collinear/equidistant.txt";
-//        int n = 0;
-//        try {
-//            File file = new File(fileName);
-//            FileReader fileReader = new FileReader(file);
-//            BufferedReader bufferedReader = new BufferedReader(fileReader);
-//            String line;
-//            if ((line = bufferedReader.readLine()) != null) {
-//                n = Integer.parseInt(line);
-//            }
-//            fileReader.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Point[] points = new Point[n];
-//        try {
-//            File file = new File(fileName);
-//            FileReader fileReader = new FileReader(file);
-//            BufferedReader bufferedReader = new BufferedReader(fileReader);
-//            String line;
-//            String[] split;
-//            int i = 0;
-//            while ((line = bufferedReader.readLine()) != null) {
-//                split = line.split("\\s+");
-//                if (split.length > 1) {
-//                    points[i++] = new Point(Integer.parseInt(split[0]),Integer.parseInt(split[1]));
-//                }
-//            }
-//            fileReader.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        for (Point p:points) {
-//            System.out.println(p);
-//        }
-//        FastCollinearPoints f = new FastCollinearPoints(points);
-//        LineSegment[] ls = f.segments();
-//        for (LineSegment l : ls) {
-//            System.out.println(l);
-//        }
     }
 }
