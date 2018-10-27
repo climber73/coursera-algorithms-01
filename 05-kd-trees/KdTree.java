@@ -13,12 +13,14 @@ public class KdTree {
         double key;
         Point2D point;
         Node left, right;
+        int size;
 
         Node(double key, Point2D point) {
             this.key = key;
             this.point = point;
             this.left = null;
             this.right = null;
+            this.size = 1;
         }
     }
 
@@ -41,7 +43,7 @@ public class KdTree {
     private int size(Node root) {
         if (root == null)
             return 0;
-        return size(root.left) + size(root.right) + 1;
+        return root.size;
     }
 
     // number of points in the set
@@ -67,6 +69,8 @@ public class KdTree {
             root.right = put(root.right, point, !useX);
         else
             root.point = point;
+
+        root.size = 1 + size(root.left) + size(root.right);
         return root;
     }
 
