@@ -63,13 +63,18 @@ public class KdTree {
             return new Node(key, point);
 
         int cmp = Double.compare(key, root.key);
-        if (cmp < 0)
+        if (cmp < 0) {
             root.left = put(root.left, point, !useX);
-        else if (cmp > 0)
+        } else if (cmp > 0) {
             root.right = put(root.right, point, !useX);
-        else
-            root.point = point;
-
+        } else { // cmp == 0
+            if (point.equals(root.point)) {
+                return root;  // do not insert existing point
+            } else {
+                // if key is the same but point is different we put it to the right
+                root.right = put(root.right, point, !useX);
+            }
+        }
         root.size = 1 + size(root.left) + size(root.right);
         return root;
     }
@@ -81,8 +86,7 @@ public class KdTree {
         Node current = root;
         boolean useX = true;
         int cmp;
-        while (current != null)
-        {
+        while (current != null) {
             if (useX)
                 cmp = Double.compare(p.x(), current.point.x());
             else
@@ -90,12 +94,13 @@ public class KdTree {
 
             useX = !useX;
 
-            if (cmp < 0)
+            if (cmp < 0) {
                 current = current.left;
-            else if (cmp > 0)
+            } else {  // when cmp >= 0
+                if (p.compareTo(current.point) == 0)
+                    return true;
                 current = current.right;
-            else
-                return p.compareTo(current.point) == 0;
+            }
         }
         return false;
     }
